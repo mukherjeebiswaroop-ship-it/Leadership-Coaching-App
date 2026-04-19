@@ -1,0 +1,1043 @@
+import { useState, useRef, useEffect } from "react";
+
+const COLORS = {
+  bg: "#0A0D14",
+  surface: "#111520",
+  card: "#161C2D",
+  border: "#1E2840",
+  accent: "#4F8EF7",
+  gold: "#D4A853",
+  green: "#3ECFA3",
+  text: "#E8EDF7",
+  muted: "#6B7A99",
+  highlight: "#1E2D50",
+};
+
+const styles = {
+  app: {
+    fontFamily: "'Georgia', 'Times New Roman', serif",
+    background: COLORS.bg,
+    minHeight: "100vh",
+    color: COLORS.text,
+    display: "flex",
+    flexDirection: "column",
+  },
+  header: {
+    background: COLORS.surface,
+    borderBottom: `1px solid ${COLORS.border}`,
+    padding: "0 32px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: 64,
+    position: "sticky",
+    top: 0,
+    zIndex: 100,
+  },
+  logo: {
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+  },
+  logoMark: {
+    width: 36,
+    height: 36,
+    background: `linear-gradient(135deg, ${COLORS.accent}, ${COLORS.gold})`,
+    borderRadius: 8,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  logoText: {
+    fontSize: 18,
+    fontWeight: 600,
+    letterSpacing: "0.04em",
+    fontFamily: "'Georgia', serif",
+    color: COLORS.text,
+  },
+  nav: {
+    display: "flex",
+    gap: 4,
+  },
+  navBtn: (active) => ({
+    padding: "8px 16px",
+    borderRadius: 6,
+    border: "none",
+    background: active ? COLORS.highlight : "transparent",
+    color: active ? COLORS.accent : COLORS.muted,
+    cursor: "pointer",
+    fontSize: 13,
+    fontFamily: "'Georgia', serif",
+    fontWeight: active ? 600 : 400,
+    letterSpacing: "0.03em",
+    transition: "all 0.2s",
+  }),
+  main: {
+    flex: 1,
+    padding: "32px",
+    maxWidth: 1100,
+    margin: "0 auto",
+    width: "100%",
+    boxSizing: "border-box",
+  },
+  pageTitle: {
+    fontSize: 28,
+    fontWeight: 600,
+    marginBottom: 8,
+    fontFamily: "'Georgia', serif",
+    letterSpacing: "-0.01em",
+  },
+  pageSubtitle: {
+    color: COLORS.muted,
+    fontSize: 15,
+    marginBottom: 32,
+    fontFamily: "'Georgia', serif",
+    fontStyle: "italic",
+  },
+  grid2: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 20,
+  },
+  card: {
+    background: COLORS.card,
+    border: `1px solid ${COLORS.border}`,
+    borderRadius: 12,
+    padding: 24,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: 600,
+    marginBottom: 6,
+    fontFamily: "'Georgia', serif",
+  },
+  cardDesc: {
+    fontSize: 13,
+    color: COLORS.muted,
+    marginBottom: 20,
+    lineHeight: 1.6,
+    fontStyle: "italic",
+  },
+  btn: (variant = "primary") => ({
+    padding: "10px 20px",
+    borderRadius: 7,
+    border: variant === "outline" ? `1px solid ${COLORS.border}` : "none",
+    background:
+      variant === "primary"
+        ? `linear-gradient(135deg, ${COLORS.accent}, #6B5EF7)`
+        : variant === "gold"
+        ? `linear-gradient(135deg, ${COLORS.gold}, #C47F1A)`
+        : "transparent",
+    color: variant === "outline" ? COLORS.muted : "#fff",
+    cursor: "pointer",
+    fontSize: 13,
+    fontFamily: "'Georgia', serif",
+    fontWeight: 600,
+    letterSpacing: "0.04em",
+    transition: "opacity 0.2s",
+  }),
+  tag: (color = COLORS.accent) => ({
+    display: "inline-block",
+    padding: "3px 10px",
+    borderRadius: 20,
+    background: color + "22",
+    color: color,
+    fontSize: 11,
+    fontWeight: 600,
+    letterSpacing: "0.06em",
+    textTransform: "uppercase",
+    fontFamily: "'Georgia', serif",
+  }),
+  chatContainer: {
+    display: "flex",
+    flexDirection: "column",
+    height: "calc(100vh - 180px)",
+    background: COLORS.card,
+    borderRadius: 14,
+    border: `1px solid ${COLORS.border}`,
+    overflow: "hidden",
+  },
+  chatHeader: {
+    padding: "20px 24px",
+    borderBottom: `1px solid ${COLORS.border}`,
+    display: "flex",
+    alignItems: "center",
+    gap: 14,
+    background: COLORS.surface,
+  },
+  avatarLarge: {
+    width: 44,
+    height: 44,
+    borderRadius: "50%",
+    background: `linear-gradient(135deg, ${COLORS.accent}, ${COLORS.gold})`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 20,
+    flexShrink: 0,
+  },
+  chatMessages: {
+    flex: 1,
+    overflowY: "auto",
+    padding: "24px",
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+  },
+  message: (isUser) => ({
+    display: "flex",
+    flexDirection: isUser ? "row-reverse" : "row",
+    gap: 12,
+    alignItems: "flex-start",
+  }),
+  messageBubble: (isUser) => ({
+    maxWidth: "72%",
+    padding: "14px 18px",
+    borderRadius: isUser ? "18px 4px 18px 18px" : "4px 18px 18px 18px",
+    background: isUser
+      ? `linear-gradient(135deg, ${COLORS.accent}, #5B4EE7)`
+      : COLORS.surface,
+    color: COLORS.text,
+    fontSize: 14,
+    lineHeight: 1.7,
+    border: isUser ? "none" : `1px solid ${COLORS.border}`,
+    fontFamily: "'Georgia', serif",
+    fontStyle: isUser ? "normal" : "normal",
+  }),
+  chatInputArea: {
+    padding: "16px 24px",
+    borderTop: `1px solid ${COLORS.border}`,
+    display: "flex",
+    gap: 12,
+    background: COLORS.surface,
+  },
+  chatInput: {
+    flex: 1,
+    background: COLORS.card,
+    border: `1px solid ${COLORS.border}`,
+    borderRadius: 8,
+    padding: "12px 16px",
+    color: COLORS.text,
+    fontSize: 14,
+    fontFamily: "'Georgia', serif",
+    resize: "none",
+    outline: "none",
+  },
+  progressBar: (pct, color = COLORS.accent) => ({
+    height: 6,
+    background: COLORS.border,
+    borderRadius: 3,
+    overflow: "hidden",
+    marginTop: 8,
+    marginBottom: 4,
+    position: "relative",
+  }),
+  progressFill: (pct, color = COLORS.accent) => ({
+    height: "100%",
+    width: `${pct}%`,
+    background: `linear-gradient(90deg, ${color}, ${color}AA)`,
+    borderRadius: 3,
+    transition: "width 0.6s ease",
+  }),
+  divider: {
+    height: 1,
+    background: COLORS.border,
+    margin: "20px 0",
+  },
+  statRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 0",
+    borderBottom: `1px solid ${COLORS.border}`,
+  },
+  contentItem: {
+    display: "flex",
+    gap: 16,
+    padding: "16px 0",
+    borderBottom: `1px solid ${COLORS.border}`,
+    alignItems: "flex-start",
+    cursor: "pointer",
+  },
+  contentIcon: (color) => ({
+    width: 44,
+    height: 44,
+    borderRadius: 10,
+    background: color + "22",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 20,
+    flexShrink: 0,
+    border: `1px solid ${color}44`,
+  }),
+  assessmentQ: {
+    marginBottom: 24,
+    padding: 20,
+    background: COLORS.surface,
+    borderRadius: 10,
+    border: `1px solid ${COLORS.border}`,
+  },
+  radioOption: (selected) => ({
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    padding: "10px 14px",
+    borderRadius: 7,
+    marginTop: 8,
+    cursor: "pointer",
+    background: selected ? COLORS.highlight : "transparent",
+    border: `1px solid ${selected ? COLORS.accent : COLORS.border}`,
+    transition: "all 0.2s",
+  }),
+};
+
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const COMPETENCIES = [
+  { label: "Strategic Vision", score: 72, color: COLORS.accent },
+  { label: "People Development", score: 58, color: COLORS.gold },
+  { label: "Decisiveness", score: 85, color: COLORS.green },
+  { label: "Emotional Intelligence", score: 63, color: "#E86CBA" },
+  { label: "Communication", score: 79, color: "#7C6EF7" },
+  { label: "Change Leadership", score: 44, color: "#F77C4F" },
+];
+
+const GROWTH_GOALS = [
+  {
+    id: 1,
+    title: "Sharpen Strategic Communication",
+    due: "June 2025",
+    progress: 60,
+    color: COLORS.accent,
+  },
+  {
+    id: 2,
+    title: "Lead Through Ambiguity",
+    due: "August 2025",
+    progress: 30,
+    color: COLORS.gold,
+  },
+  {
+    id: 3,
+    title: "Build a Coaching Culture",
+    due: "October 2025",
+    progress: 15,
+    color: COLORS.green,
+  },
+];
+
+const CONTENT_LIBRARY = [
+  {
+    emoji: "📖",
+    title: "The 5 Levels of Leadership",
+    type: "Article",
+    time: "8 min",
+    color: COLORS.accent,
+    level: "All levels",
+  },
+  {
+    emoji: "🎧",
+    title: "Difficult Conversations That Work",
+    type: "Podcast",
+    time: "32 min",
+    color: COLORS.gold,
+    level: "Mid-level",
+  },
+  {
+    emoji: "✍️",
+    title: "Weekly Reflection: What Did I Learn?",
+    type: "Exercise",
+    time: "15 min",
+    color: COLORS.green,
+    level: "All levels",
+  },
+  {
+    emoji: "🎥",
+    title: "Psychological Safety in Teams",
+    type: "Video",
+    time: "22 min",
+    color: "#E86CBA",
+    level: "Senior",
+  },
+  {
+    emoji: "📖",
+    title: "Influence Without Authority",
+    type: "Article",
+    time: "6 min",
+    color: "#7C6EF7",
+    level: "Emerging",
+  },
+  {
+    emoji: "✍️",
+    title: "My Leadership Values Map",
+    type: "Exercise",
+    time: "20 min",
+    color: "#F77C4F",
+    level: "All levels",
+  },
+];
+
+const ASSESSMENT_QUESTIONS = [
+  {
+    id: 1,
+    text: "When facing a complex organizational challenge, I typically...",
+    options: [
+      "Seek input broadly before deciding",
+      "Trust my instincts and move quickly",
+      "Analyze data extensively first",
+      "Consult a small group of trusted advisors",
+    ],
+  },
+  {
+    id: 2,
+    text: "My team would describe my feedback style as...",
+    options: [
+      "Direct and specific",
+      "Encouraging and supportive",
+      "Thoughtful but sometimes delayed",
+      "Collaborative — we figure it out together",
+    ],
+  },
+  {
+    id: 3,
+    text: "When leading through significant change, my biggest challenge is...",
+    options: [
+      "Managing my own uncertainty",
+      "Bringing skeptics along",
+      "Maintaining momentum",
+      "Communicating the 'why' compellingly",
+    ],
+  },
+];
+
+const INITIAL_MESSAGES = [
+  {
+    id: 1,
+    role: "assistant",
+    text: "Welcome. I'm your leadership coach — a thinking partner for the challenges, decisions, and growth that define your journey as a leader.\n\nI draw on frameworks from executive coaching, organizational psychology, and the wisdom of thousands of leadership journeys.\n\nWhat's on your mind today? We could explore a specific challenge you're facing, reflect on a recent leadership moment, or work on a development goal.",
+  },
+];
+
+// ─── COMPONENTS ──────────────────────────────────────────────────────────────
+
+function Avatar({ size = 36, emoji = "🎯" }) {
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        background: `linear-gradient(135deg, ${COLORS.accent}, ${COLORS.gold})`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: size * 0.45,
+        flexShrink: 0,
+      }}
+    >
+      {emoji}
+    </div>
+  );
+}
+
+function Spinner() {
+  return (
+    <div style={{ display: "flex", gap: 5, padding: "4px 0" }}>
+      {[0, 1, 2].map((i) => (
+        <div
+          key={i}
+          style={{
+            width: 7,
+            height: 7,
+            borderRadius: "50%",
+            background: COLORS.muted,
+            animation: `pulse 1.2s ${i * 0.2}s ease-in-out infinite`,
+          }}
+        />
+      ))}
+      <style>{`@keyframes pulse { 0%,100%{opacity:0.3;transform:scale(0.8)} 50%{opacity:1;transform:scale(1)} }`}</style>
+    </div>
+  );
+}
+
+// ─── PAGES ───────────────────────────────────────────────────────────────────
+
+function DashboardPage({ setTab }) {
+  return (
+    <div>
+      <div style={styles.pageTitle}>Good morning, Alex.</div>
+      <div style={styles.pageSubtitle}>
+        "Leadership is not about being in charge. It's about taking care of
+        those in your charge."
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20, marginBottom: 24 }}>
+        {[
+          { label: "Coaching Sessions", value: "12", sub: "this quarter", emoji: "💬", color: COLORS.accent },
+          { label: "Active Goals", value: "3", sub: "in progress", emoji: "🎯", color: COLORS.gold },
+          { label: "Streak", value: "8 days", sub: "of reflection", emoji: "🔥", color: COLORS.green },
+        ].map((s) => (
+          <div key={s.label} style={{ ...styles.card, display: "flex", alignItems: "center", gap: 16 }}>
+            <div style={{ fontSize: 32 }}>{s.emoji}</div>
+            <div>
+              <div style={{ fontSize: 24, fontWeight: 700, color: s.color }}>{s.value}</div>
+              <div style={{ fontSize: 12, color: COLORS.muted }}>{s.label}</div>
+              <div style={{ fontSize: 11, color: COLORS.muted, fontStyle: "italic" }}>{s.sub}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={styles.grid2}>
+        <div style={styles.card}>
+          <div style={styles.cardTitle}>Leadership Competencies</div>
+          <div style={styles.cardDesc}>Your self-assessed strengths & growth areas</div>
+          {COMPETENCIES.map((c) => (
+            <div key={c.label} style={{ marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                <span style={{ fontSize: 13 }}>{c.label}</span>
+                <span style={{ fontSize: 13, color: c.color, fontWeight: 600 }}>{c.score}%</span>
+              </div>
+              <div style={styles.progressBar(c.score, c.color)}>
+                <div style={styles.progressFill(c.score, c.color)} />
+              </div>
+            </div>
+          ))}
+          <button style={{ ...styles.btn("outline"), marginTop: 12 }} onClick={() => setTab("assessment")}>
+            Retake Assessment →
+          </button>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          <div style={styles.card}>
+            <div style={styles.cardTitle}>Growth Goals</div>
+            <div style={styles.cardDesc}>Your current development commitments</div>
+            {GROWTH_GOALS.map((g) => (
+              <div key={g.id} style={{ marginBottom: 16 }}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: 13, fontWeight: 600 }}>{g.title}</span>
+                  <span style={{ ...styles.tag(g.color) }}>{g.progress}%</span>
+                </div>
+                <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>Due {g.due}</div>
+                <div style={styles.progressBar(g.progress, g.color)}>
+                  <div style={styles.progressFill(g.progress, g.color)} />
+                </div>
+              </div>
+            ))}
+            <button style={{ ...styles.btn("outline") }} onClick={() => setTab("growth")}>
+              View Full Plan →
+            </button>
+          </div>
+
+          <div style={{ ...styles.card, background: `linear-gradient(135deg, #0E1E3A, #101828)`, border: `1px solid ${COLORS.accent}44` }}>
+            <div style={{ fontSize: 13, color: COLORS.accent, fontWeight: 600, marginBottom: 8 }}>
+              💡 Today's Reflection Prompt
+            </div>
+            <div style={{ fontSize: 15, lineHeight: 1.7, fontStyle: "italic", marginBottom: 16 }}>
+              "Think of a team member who is growing. What specific action did you take this week that contributed to their development?"
+            </div>
+            <button style={styles.btn("primary")} onClick={() => setTab("coach")}>
+              Reflect with Coach →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CoachPage() {
+  const [messages, setMessages] = useState(INITIAL_MESSAGES);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
+
+  async function sendMessage() {
+    const text = input.trim();
+    if (!text || loading) return;
+    setInput("");
+
+    const userMsg = { id: Date.now(), role: "user", text };
+    const history = [...messages, userMsg];
+    setMessages(history);
+    setLoading(true);
+
+    try {
+      const apiMessages = history.map((m) => ({
+        role: m.role,
+        content: m.text,
+      }));
+
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          system: `You are an expert executive leadership coach with deep expertise in leadership development, organizational behavior, and human psychology. You work with leaders at all levels — from first-time managers to C-suite executives.
+
+Your coaching approach:
+- Ask powerful, open-ended questions that promote self-reflection
+- Draw on established frameworks (situational leadership, emotional intelligence, Johari window, etc.) when relevant — but never lecture
+- Validate the complexity of leadership challenges without giving easy answers
+- Help leaders uncover their own insights rather than prescribing solutions
+- Be warm, direct, and challenging in equal measure
+- Keep responses focused and conversational — typically 2-4 paragraphs
+- Occasionally offer a relevant framework, exercise, or reflection prompt
+- You believe that great leadership is fundamentally about self-awareness and serving others
+
+Never be generic. Engage deeply with what the leader actually shares.`,
+          messages: apiMessages,
+        }),
+      });
+
+      const data = await res.json();
+      const reply = data.content?.[0]?.text || "I'm here with you. Tell me more.";
+      setMessages([...history, { id: Date.now() + 1, role: "assistant", text: reply }]);
+    } catch {
+      setMessages([...history, { id: Date.now() + 1, role: "assistant", text: "I'm having trouble connecting right now. Please try again in a moment." }]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div style={styles.chatContainer}>
+      <div style={styles.chatHeader}>
+        <Avatar size={44} emoji="🧭" />
+        <div>
+          <div style={{ fontWeight: 600, fontSize: 15 }}>Leadership Coach</div>
+          <div style={{ fontSize: 12, color: COLORS.green }}>● Available now</div>
+        </div>
+        <div style={{ marginLeft: "auto", fontSize: 12, color: COLORS.muted, fontStyle: "italic" }}>
+          Confidential · Your space to think
+        </div>
+      </div>
+
+      <div style={styles.chatMessages}>
+        {messages.map((m) => (
+          <div key={m.id} style={styles.message(m.role === "user")}>
+            {m.role === "assistant" && <Avatar size={32} emoji="🧭" />}
+            <div style={styles.messageBubble(m.role === "user")}>
+              {m.text.split("\n").map((line, i) => (
+                <span key={i}>{line}{i < m.text.split("\n").length - 1 && <br />}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div style={styles.message(false)}>
+            <Avatar size={32} emoji="🧭" />
+            <div style={{ ...styles.messageBubble(false), padding: "14px 18px" }}>
+              <Spinner />
+            </div>
+          </div>
+        )}
+        <div ref={bottomRef} />
+      </div>
+
+      <div style={styles.chatInputArea}>
+        <textarea
+          style={styles.chatInput}
+          rows={2}
+          placeholder="Share what's on your mind..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+          }}
+        />
+        <button
+          style={{ ...styles.btn("primary"), alignSelf: "flex-end", padding: "12px 20px" }}
+          onClick={sendMessage}
+          disabled={loading || !input.trim()}
+        >
+          Send →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AssessmentPage() {
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [aiInsight, setAiInsight] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function submit() {
+    if (Object.keys(answers).length < ASSESSMENT_QUESTIONS.length) return;
+    setLoading(true);
+    setSubmitted(true);
+
+    const answerSummary = ASSESSMENT_QUESTIONS.map((q, i) => ({
+      question: q.text,
+      answer: q.options[answers[q.id]],
+    }));
+
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [{
+            role: "user",
+            content: `You are a leadership development expert. A leader has just completed a short leadership style assessment. Provide a thoughtful, personalized insight based on their answers. Be specific, constructive, and developmental. Include: 1) A brief characterization of their leadership style (2-3 sentences), 2) A key strength reflected in their answers, 3) A growth edge to explore. Keep it to 3 short paragraphs. Answers: ${JSON.stringify(answerSummary)}`,
+          }],
+        }),
+      });
+      const data = await res.json();
+      setAiInsight(data.content?.[0]?.text || "");
+    } catch {
+      setAiInsight("Your responses reveal a thoughtful leadership approach. Connect with your coach to explore these insights further.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (submitted) {
+    return (
+      <div>
+        <div style={styles.pageTitle}>Your Assessment Results</div>
+        <div style={styles.pageSubtitle}>A mirror for your leadership self-awareness</div>
+        <div style={styles.grid2}>
+          <div style={styles.card}>
+            <div style={styles.cardTitle}>Competency Scores</div>
+            {COMPETENCIES.map((c) => (
+              <div key={c.label} style={{ marginBottom: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ fontSize: 13 }}>{c.label}</span>
+                  <span style={{ fontSize: 13, color: c.color, fontWeight: 600 }}>{c.score}%</span>
+                </div>
+                <div style={styles.progressBar()}>
+                  <div style={styles.progressFill(c.score, c.color)} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ ...styles.card, background: `linear-gradient(135deg, #0E1E3A, #101828)`, border: `1px solid ${COLORS.gold}44` }}>
+            <div style={{ fontSize: 13, color: COLORS.gold, fontWeight: 600, marginBottom: 12 }}>
+              ✨ AI Coach Insight
+            </div>
+            {loading ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 10, color: COLORS.muted }}>
+                <Spinner /> Analyzing your responses...
+              </div>
+            ) : (
+              <div style={{ fontSize: 14, lineHeight: 1.8, color: COLORS.text }}>
+                {aiInsight.split("\n\n").map((p, i) => (
+                  <p key={i} style={{ marginBottom: 12, fontStyle: i === 0 ? "italic" : "normal" }}>{p}</p>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div style={styles.pageTitle}>Leadership Assessment</div>
+      <div style={styles.pageSubtitle}>
+        Honest reflection is the foundation of all development
+      </div>
+      <div style={{ maxWidth: 680 }}>
+        {ASSESSMENT_QUESTIONS.map((q) => (
+          <div key={q.id} style={styles.assessmentQ}>
+            <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 14, lineHeight: 1.5 }}>
+              {q.id}. {q.text}
+            </div>
+            {q.options.map((opt, idx) => (
+              <div
+                key={idx}
+                style={styles.radioOption(answers[q.id] === idx)}
+                onClick={() => setAnswers({ ...answers, [q.id]: idx })}
+              >
+                <div style={{
+                  width: 16, height: 16, borderRadius: "50%",
+                  border: `2px solid ${answers[q.id] === idx ? COLORS.accent : COLORS.border}`,
+                  background: answers[q.id] === idx ? COLORS.accent : "transparent",
+                  flexShrink: 0,
+                }} />
+                <span style={{ fontSize: 13 }}>{opt}</span>
+              </div>
+            ))}
+          </div>
+        ))}
+        <button
+          style={{
+            ...styles.btn("gold"),
+            opacity: Object.keys(answers).length < ASSESSMENT_QUESTIONS.length ? 0.4 : 1,
+            padding: "14px 32px",
+            fontSize: 14,
+          }}
+          onClick={submit}
+        >
+          Get My Insights →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function GrowthPage() {
+  const [goals, setGoals] = useState(GROWTH_GOALS);
+  const [showAdd, setShowAdd] = useState(false);
+  const [newGoal, setNewGoal] = useState("");
+  const [aiPlan, setAiPlan] = useState(null);
+  const [loadingGoal, setLoadingGoal] = useState(null);
+
+  async function generatePlan(goal) {
+    setLoadingGoal(goal.id);
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [{
+            role: "user",
+            content: `You are a leadership development coach. Create a concise 90-day action plan for a leader working on this goal: "${goal.title}". Format as JSON: { "milestones": [{"week": "Weeks 1-4", "action": "...", "outcome": "..."}, ...3 total milestones], "keyPractice": "one daily/weekly practice", "successIndicator": "how they'll know they've made progress" }. Return only valid JSON.`,
+          }],
+        }),
+      });
+      const data = await res.json();
+      const text = data.content?.[0]?.text || "{}";
+      const clean = text.replace(/```json|```/g, "").trim();
+      const plan = JSON.parse(clean);
+      setAiPlan({ goalId: goal.id, goalTitle: goal.title, ...plan });
+    } catch {
+      setAiPlan({ goalId: goal.id, goalTitle: goal.title, milestones: [], keyPractice: "Daily reflection journaling", successIndicator: "Increased confidence and team feedback" });
+    } finally {
+      setLoadingGoal(null);
+    }
+  }
+
+  return (
+    <div>
+      <div style={styles.pageTitle}>Growth Plan</div>
+      <div style={styles.pageSubtitle}>Your development commitments, made visible</div>
+
+      <div style={styles.grid2}>
+        <div>
+          {goals.map((g) => (
+            <div key={g.id} style={{ ...styles.card, marginBottom: 16 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+                <div style={{ fontSize: 15, fontWeight: 600 }}>{g.title}</div>
+                <span style={styles.tag(g.color)}>{g.progress}%</span>
+              </div>
+              <div style={{ fontSize: 12, color: COLORS.muted, marginBottom: 12 }}>Target: {g.due}</div>
+              <div style={styles.progressBar()}>
+                <div style={styles.progressFill(g.progress, g.color)} />
+              </div>
+              <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
+                <button
+                  style={{ ...styles.btn("outline"), fontSize: 12, padding: "7px 14px" }}
+                  onClick={() => generatePlan(g)}
+                  disabled={loadingGoal === g.id}
+                >
+                  {loadingGoal === g.id ? "Building plan..." : "✨ AI Action Plan"}
+                </button>
+                <button
+                  style={{ ...styles.btn("outline"), fontSize: 12, padding: "7px 14px" }}
+                  onClick={() => setGoals(goals.map(x => x.id === g.id ? { ...x, progress: Math.min(100, x.progress + 10) } : x))}
+                >
+                  Log Progress
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {!showAdd ? (
+            <button style={{ ...styles.btn("outline"), width: "100%", padding: 14 }} onClick={() => setShowAdd(true)}>
+              + Add New Goal
+            </button>
+          ) : (
+            <div style={styles.card}>
+              <input
+                style={{ ...styles.chatInput, width: "100%", boxSizing: "border-box", borderRadius: 7, marginBottom: 12 }}
+                placeholder="e.g. Become a more effective listener"
+                value={newGoal}
+                onChange={(e) => setNewGoal(e.target.value)}
+              />
+              <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  style={styles.btn("primary")}
+                  onClick={() => {
+                    if (newGoal.trim()) {
+                      const colors = [COLORS.accent, COLORS.gold, COLORS.green, "#E86CBA", "#7C6EF7"];
+                      setGoals([...goals, { id: Date.now(), title: newGoal.trim(), due: "Dec 2025", progress: 0, color: colors[goals.length % colors.length] }]);
+                      setNewGoal(""); setShowAdd(false);
+                    }
+                  }}
+                >Add Goal</button>
+                <button style={styles.btn("outline")} onClick={() => setShowAdd(false)}>Cancel</button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div>
+          {aiPlan ? (
+            <div style={{ ...styles.card, border: `1px solid ${COLORS.gold}44` }}>
+              <div style={{ fontSize: 13, color: COLORS.gold, fontWeight: 600, marginBottom: 4 }}>✨ 90-Day Action Plan</div>
+              <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 16 }}>{aiPlan.goalTitle}</div>
+              {(aiPlan.milestones || []).map((m, i) => (
+                <div key={i} style={{ marginBottom: 16, paddingLeft: 16, borderLeft: `3px solid ${COLORS.gold}44` }}>
+                  <div style={{ fontSize: 11, color: COLORS.gold, fontWeight: 600, marginBottom: 4 }}>{m.week}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>{m.action}</div>
+                  <div style={{ fontSize: 12, color: COLORS.muted, fontStyle: "italic" }}>Outcome: {m.outcome}</div>
+                </div>
+              ))}
+              <div style={styles.divider} />
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ fontSize: 11, color: COLORS.green, fontWeight: 600, marginBottom: 4 }}>DAILY PRACTICE</div>
+                <div style={{ fontSize: 13 }}>{aiPlan.keyPractice}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: COLORS.accent, fontWeight: 600, marginBottom: 4 }}>SUCCESS LOOKS LIKE</div>
+                <div style={{ fontSize: 13, fontStyle: "italic" }}>{aiPlan.successIndicator}</div>
+              </div>
+            </div>
+          ) : (
+            <div style={{ ...styles.card, textAlign: "center", padding: 48, background: COLORS.surface }}>
+              <div style={{ fontSize: 40, marginBottom: 16 }}>🗺️</div>
+              <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 8 }}>Generate an AI Action Plan</div>
+              <div style={{ fontSize: 13, color: COLORS.muted, fontStyle: "italic", lineHeight: 1.7 }}>
+                Click "✨ AI Action Plan" on any goal to get a personalized 90-day roadmap with milestones, practices, and success indicators.
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ContentPage() {
+  const [filter, setFilter] = useState("All");
+  const types = ["All", "Article", "Podcast", "Video", "Exercise"];
+
+  const filtered = filter === "All" ? CONTENT_LIBRARY : CONTENT_LIBRARY.filter((c) => c.type === filter);
+
+  return (
+    <div>
+      <div style={styles.pageTitle}>Learning Library</div>
+      <div style={styles.pageSubtitle}>Curated resources for every stage of your leadership journey</div>
+
+      <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
+        {types.map((t) => (
+          <button key={t} style={styles.navBtn(filter === t)} onClick={() => setFilter(t)}>
+            {t}
+          </button>
+        ))}
+      </div>
+
+      <div style={styles.grid2}>
+        <div style={styles.card}>
+          {filtered.map((item, i) => (
+            <div
+              key={i}
+              style={{
+                ...styles.contentItem,
+                borderBottom: i === filtered.length - 1 ? "none" : `1px solid ${COLORS.border}`,
+              }}
+            >
+              <div style={styles.contentIcon(item.color)}>{item.emoji}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>{item.title}</div>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <span style={styles.tag(item.color)}>{item.type}</span>
+                  <span style={{ fontSize: 11, color: COLORS.muted }}>{item.time}</span>
+                  <span style={{ fontSize: 11, color: COLORS.muted }}>· {item.level}</span>
+                </div>
+              </div>
+              <div style={{ fontSize: 18, color: COLORS.muted }}>→</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div style={{ ...styles.card, background: `linear-gradient(135deg, #0E1E3A, #0D1926)`, border: `1px solid ${COLORS.accent}44` }}>
+            <div style={{ fontSize: 13, color: COLORS.accent, fontWeight: 600, marginBottom: 8 }}>📚 Recommended for You</div>
+            <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 8 }}>Change Leadership Foundations</div>
+            <div style={{ fontSize: 13, color: COLORS.muted, lineHeight: 1.7, marginBottom: 16, fontStyle: "italic" }}>
+              Based on your assessment, your lowest-rated competency is Change Leadership. These 3 resources will accelerate your growth.
+            </div>
+            {["Leading Change – Kotter's 8 Steps", "Managing Resistance Effectively", "The Change Curve Explained"].map((r, i) => (
+              <div key={i} style={{ padding: "8px 0", borderBottom: i < 2 ? `1px solid ${COLORS.border}` : "none", fontSize: 13, display: "flex", justifyContent: "space-between" }}>
+                <span>{r}</span>
+                <span style={{ color: COLORS.accent }}>→</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={styles.card}>
+            <div style={{ fontSize: 13, color: COLORS.gold, fontWeight: 600, marginBottom: 12 }}>🏆 This Week's Challenge</div>
+            <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 8 }}>The Listening Experiment</div>
+            <div style={{ fontSize: 13, color: COLORS.muted, lineHeight: 1.7, marginBottom: 16, fontStyle: "italic" }}>
+              In your next three conversations, speak less than 30% of the time. Notice what you learn.
+            </div>
+            <button style={styles.btn("gold")}>Accept Challenge →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── APP ─────────────────────────────────────────────────────────────────────
+
+export default function App() {
+  const [tab, setTab] = useState("dashboard");
+
+  const tabs = [
+    { id: "dashboard", label: "Dashboard" },
+    { id: "coach", label: "AI Coach" },
+    { id: "assessment", label: "Assessment" },
+    { id: "growth", label: "Growth Plan" },
+    { id: "content", label: "Library" },
+  ];
+
+  return (
+    <div style={styles.app}>
+      <header style={styles.header}>
+        <div style={styles.logo}>
+          <div style={styles.logoMark}>L</div>
+          <div style={styles.logoText}>LeaderForge</div>
+        </div>
+        <nav style={styles.nav}>
+          {tabs.map((t) => (
+            <button key={t.id} style={styles.navBtn(tab === t.id)} onClick={() => setTab(t.id)}>
+              {t.label}
+            </button>
+          ))}
+        </nav>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ fontSize: 12, color: COLORS.muted }}>Alex Rivera</div>
+          <div style={{ width: 32, height: 32, borderRadius: "50%", background: COLORS.highlight, border: `2px solid ${COLORS.accent}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>A</div>
+        </div>
+      </header>
+
+      <main style={styles.main}>
+        {tab === "dashboard" && <DashboardPage setTab={setTab} />}
+        {tab === "coach" && <CoachPage />}
+        {tab === "assessment" && <AssessmentPage />}
+        {tab === "growth" && <GrowthPage />}
+        {tab === "content" && <ContentPage />}
+      </main>
+    </div>
+  );
+}
