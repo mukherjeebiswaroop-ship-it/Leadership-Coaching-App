@@ -414,6 +414,189 @@ const ASSESSMENT_QUESTIONS = [
   },
 ];
 
+// ─── HOGAN PERSONALITY DATA ──────────────────────────────────────────────────
+
+const HOGAN_SCALES = [
+  {
+    id: "AJ",
+    name: "Adjustment",
+    color: "#4F8EF7",
+    icon: "⚖️",
+    description: "Emotional stability, composure under pressure, and self-confidence",
+    leadershipImplication:
+      "High scorers remain calm and decisive under pressure, projecting steadiness that reassures teams. Low scorers may be reactive but are often finely attuned to organizational tension before others notice it.",
+    interpretations: {
+      veryLow: "Frequently experiences emotional distress; stress significantly disrupts performance and decision-making.",
+      low: "Prone to anxiety and worry; may struggle under sustained pressure or repeated criticism.",
+      average: "Moderate emotional stability; manages most situations well but may be rattled by sustained adversity.",
+      high: "Generally stable and resilient; maintains composure and good judgment in most demanding situations.",
+      veryHigh: "Exceptionally calm and self-assured; handles high-stakes pressure with remarkable consistency.",
+    },
+  },
+  {
+    id: "AM",
+    name: "Ambition",
+    color: "#D4A853",
+    icon: "🎯",
+    description: "Achievement drive, leadership motivation, and competitive energy",
+    leadershipImplication:
+      "High scorers pursue goals relentlessly and energize organizations through their visible drive. Low scorers are often perceived as collaborative and humble rather than self-promoting.",
+    interpretations: {
+      veryLow: "Little interest in advancement or leadership; content in supporting roles; avoids competitive situations.",
+      low: "Modest ambition; prefers stability over advancement; less energized by competition.",
+      average: "Balanced achievement orientation; motivated when needed but not intensely competitive.",
+      high: "Strong drive to advance, take initiative, and lead; sets bold goals and pursues them persistently.",
+      veryHigh: "Highly competitive and relentlessly goal-focused; a powerful force for results but may alienate peers.",
+    },
+  },
+  {
+    id: "SO",
+    name: "Sociability",
+    color: "#3ECFA3",
+    icon: "🤝",
+    description: "Social engagement, extraversion, and comfort in group settings",
+    leadershipImplication:
+      "High scorers build broad networks and energize teams through visibility and warmth. Low scorers lead through expertise and depth rather than charisma.",
+    interpretations: {
+      veryLow: "Strongly introverted; social interaction requires significant effort; prefers solitary, focused work.",
+      low: "Introverted; extended social interaction is draining; most effective in small, focused settings.",
+      average: "Comfortable in both social and individual contexts; adapts readily to either environment.",
+      high: "Enjoys socializing and builds networks readily; energized by group collaboration and interaction.",
+      veryHigh: "Highly extroverted; thrives in social settings; constantly seeks connection and group engagement.",
+    },
+  },
+  {
+    id: "IS",
+    name: "Interpersonal Sensitivity",
+    color: "#E86CBA",
+    icon: "💗",
+    description: "Empathy, warmth, and attunement to others' emotions and needs",
+    leadershipImplication:
+      "High scorers build deep trust and loyalty through genuine care. Low scorers drive results effectively but risk alienating people by appearing indifferent to the human side of work.",
+    interpretations: {
+      veryLow: "Strongly task-oriented; may inadvertently disregard the emotional dimension of interactions.",
+      low: "More focused on tasks than people; may be seen as blunt or insensitive to others' feelings.",
+      average: "Reasonably sensitive while remaining appropriately direct; balances task and people focus well.",
+      high: "Warm and considerate; builds strong relationships through genuine attunement to others.",
+      veryHigh: "Deeply empathetic and relationship-focused; naturally builds trust and loyalty; a people magnet.",
+    },
+  },
+  {
+    id: "PR",
+    name: "Prudence",
+    color: "#7C6EF7",
+    icon: "📋",
+    description: "Conscientiousness, reliability, and commitment to rules and structure",
+    leadershipImplication:
+      "High scorers are dependable and create well-organized, disciplined teams. Low scorers are creative and adaptive but may struggle with follow-through and execution.",
+    interpretations: {
+      veryLow: "Highly impulsive; resists structure; unreliable in meeting commitments; acts before thinking.",
+      low: "Spontaneous and flexible; may struggle with follow-through; prefers freedom over structure.",
+      average: "Reasonably reliable and organized; generally meets commitments while maintaining flexibility.",
+      high: "Dependable and well-organized; strong follow-through; respects processes and structure.",
+      veryHigh: "Highly conscientious and detail-oriented; extremely reliable; may be overly rigid at times.",
+    },
+  },
+  {
+    id: "IQ",
+    name: "Inquisitive",
+    color: "#F77C4F",
+    icon: "🔭",
+    description: "Intellectual curiosity, creativity, and openness to novel ideas",
+    leadershipImplication:
+      "High scorers are innovative, strategic thinkers who challenge the status quo. Low scorers are disciplined executors who prefer what is proven to work.",
+    interpretations: {
+      veryLow: "Strongly conventional; little interest in theory or new ideas; prefers routine and proven methods.",
+      low: "Practical and focused; prefers tried-and-true approaches; skeptical of experimentation.",
+      average: "Reasonably open to new ideas while maintaining a practical orientation; explores selectively.",
+      high: "Creative and intellectually curious; enjoys diverse ideas, theories, and unconventional perspectives.",
+      veryHigh: "Highly visionary and creative; generates many novel ideas; needs focus to drive implementation.",
+    },
+  },
+  {
+    id: "LA",
+    name: "Learning Approach",
+    color: "#59C3E8",
+    icon: "📚",
+    description: "Commitment to continuous learning and professional self-development",
+    leadershipImplication:
+      "High scorers continuously develop themselves and model growth for their teams. Low scorers rely on hard-won experience rather than formal development and can be highly pragmatic.",
+    interpretations: {
+      veryLow: "Little interest in structured learning; relies primarily on past experience to navigate challenges.",
+      low: "Modest interest in formal learning; prefers practical, on-the-job knowledge over study.",
+      average: "Reasonably committed to learning; pursues development when clearly relevant to current work.",
+      high: "Strong commitment to learning; regularly invests in professional and personal development.",
+      veryHigh: "Exceptionally dedicated to self-development; models lifelong learning; continuously seeks new knowledge.",
+    },
+  },
+];
+
+const HOGAN_QUESTIONS = [
+  // ADJUSTMENT — 7 questions
+  { id: 1,  scale: "AJ", reverse: false, text: "I remain calm and composed even in high-pressure situations." },
+  { id: 2,  scale: "AJ", reverse: true,  text: "I often find myself worrying about things that could go wrong at work." },
+  { id: 3,  scale: "AJ", reverse: false, text: "I handle setbacks and failures without becoming frustrated or upset for long." },
+  { id: 4,  scale: "AJ", reverse: true,  text: "Criticism from others can significantly affect my mood for hours afterward." },
+  { id: 5,  scale: "AJ", reverse: false, text: "I am generally satisfied with myself and confident in my abilities." },
+  { id: 6,  scale: "AJ", reverse: true,  text: "I tend to feel anxious when facing significant uncertainty or ambiguity." },
+  { id: 7,  scale: "AJ", reverse: false, text: "I recover quickly from disappointments and refocus without difficulty." },
+
+  // AMBITION — 7 questions
+  { id: 8,  scale: "AM", reverse: false, text: "I consistently set high standards for myself and push hard to exceed them." },
+  { id: 9,  scale: "AM", reverse: false, text: "I am strongly motivated to be in positions of leadership and influence." },
+  { id: 10, scale: "AM", reverse: true,  text: "I sometimes prefer to let others take the lead rather than stepping forward myself." },
+  { id: 11, scale: "AM", reverse: false, text: "Achieving my professional goals is a central priority in my life." },
+  { id: 12, scale: "AM", reverse: false, text: "I am energized by competition and relish the opportunity to outperform." },
+  { id: 13, scale: "AM", reverse: true,  text: "I tend to be less assertive when advocating for my own ideas and interests." },
+  { id: 14, scale: "AM", reverse: false, text: "I see myself as someone with strong leadership capability and potential." },
+
+  // SOCIABILITY — 7 questions
+  { id: 15, scale: "SO", reverse: false, text: "I genuinely enjoy meeting new people and striking up conversations." },
+  { id: 16, scale: "SO", reverse: true,  text: "I find extended social interactions more draining than energizing." },
+  { id: 17, scale: "SO", reverse: false, text: "I am comfortable being the center of attention in group settings." },
+  { id: 18, scale: "SO", reverse: true,  text: "I prefer working alone to working in a team or group setting." },
+  { id: 19, scale: "SO", reverse: false, text: "I actively seek out opportunities to network and build professional relationships." },
+  { id: 20, scale: "SO", reverse: true,  text: "I feel most productive when I can work independently with minimal interruption." },
+  { id: 21, scale: "SO", reverse: false, text: "I enjoy lively, social work environments and feel energized by them." },
+
+  // INTERPERSONAL SENSITIVITY — 7 questions
+  { id: 22, scale: "IS", reverse: false, text: "I am genuinely and deeply interested in the well-being of the people around me." },
+  { id: 23, scale: "IS", reverse: true,  text: "I sometimes come across as too blunt or direct without considering others' feelings." },
+  { id: 24, scale: "IS", reverse: false, text: "I can easily put myself in other people's shoes and understand their perspective." },
+  { id: 25, scale: "IS", reverse: false, text: "Maintaining harmony in my relationships is a high priority for me." },
+  { id: 26, scale: "IS", reverse: true,  text: "I tend to be very direct even when it might make others uncomfortable." },
+  { id: 27, scale: "IS", reverse: false, text: "I naturally pick up on how others are feeling, even when they don't say so." },
+  { id: 28, scale: "IS", reverse: true,  text: "I prioritize getting results over worrying about how my approach affects others." },
+
+  // PRUDENCE — 7 questions
+  { id: 29, scale: "PR", reverse: false, text: "I plan my work carefully and methodically before diving in." },
+  { id: 30, scale: "PR", reverse: true,  text: "I sometimes act impulsively without fully thinking through the consequences." },
+  { id: 31, scale: "PR", reverse: false, text: "I follow established rules and procedures even when they feel unnecessary." },
+  { id: 32, scale: "PR", reverse: false, text: "I am a highly organized person who pays close attention to detail." },
+  { id: 33, scale: "PR", reverse: true,  text: "I sometimes leave tasks unfinished when something more interesting comes along." },
+  { id: 34, scale: "PR", reverse: false, text: "I take my commitments and deadlines extremely seriously." },
+  { id: 35, scale: "PR", reverse: true,  text: "I strongly prefer flexibility and adaptability over rigid plans and structures." },
+
+  // INQUISITIVE — 8 questions
+  { id: 36, scale: "IQ", reverse: false, text: "I love exploring ideas and concepts across many different fields and disciplines." },
+  { id: 37, scale: "IQ", reverse: true,  text: "I prefer proven, practical approaches over novel or experimental ones." },
+  { id: 38, scale: "IQ", reverse: false, text: "I regularly generate creative and unconventional solutions to complex problems." },
+  { id: 39, scale: "IQ", reverse: false, text: "I tend to think in abstract or theoretical terms, even about practical matters." },
+  { id: 40, scale: "IQ", reverse: true,  text: "I would rather focus deeply on one area than explore many ideas broadly." },
+  { id: 41, scale: "IQ", reverse: false, text: "I have a vivid imagination and naturally approach problems in unconventional ways." },
+  { id: 42, scale: "IQ", reverse: false, text: "I enjoy intellectual debates and thrive when exploring different points of view." },
+  { id: 43, scale: "IQ", reverse: true,  text: "I prefer familiar routines over trying new ways of doing things." },
+
+  // LEARNING APPROACH — 7 questions
+  { id: 44, scale: "LA", reverse: false, text: "I regularly read books, articles, or research to stay current in my professional field." },
+  { id: 45, scale: "LA", reverse: true,  text: "I have little interest in formal education or structured learning programs." },
+  { id: 46, scale: "LA", reverse: false, text: "I actively seek out feedback from others to identify areas for improvement." },
+  { id: 47, scale: "LA", reverse: false, text: "I genuinely enjoy taking on challenges that require me to learn unfamiliar skills." },
+  { id: 48, scale: "LA", reverse: true,  text: "I believe I already know most of what I need to perform my role effectively." },
+  { id: 49, scale: "LA", reverse: false, text: "I deliberately set aside time to develop myself as a leader and professional." },
+  { id: 50, scale: "LA", reverse: false, text: "I view mistakes and failures as valuable opportunities to learn and grow." },
+];
+
 const INITIAL_MESSAGES = [
   {
     id: 1,
@@ -998,6 +1181,416 @@ function ContentPage() {
   );
 }
 
+// ─── PERSONALITY ASSESSMENT ──────────────────────────────────────────────────
+
+const LIKERT_LABELS = ["Strongly\nDisagree", "Disagree", "Neutral", "Agree", "Strongly\nAgree"];
+const QUESTIONS_PER_PAGE = 5;
+const TOTAL_PAGES = Math.ceil(HOGAN_QUESTIONS.length / QUESTIONS_PER_PAGE);
+
+function computeHoganScores(answers) {
+  const result = {};
+  HOGAN_SCALES.forEach((scale) => {
+    const qs = HOGAN_QUESTIONS.filter((q) => q.scale === scale.id);
+    const sum = qs.reduce((acc, q) => {
+      const raw = answers[q.id] ?? 3;
+      return acc + (q.reverse ? 6 - raw : raw);
+    }, 0);
+    result[scale.id] = Math.round(((sum / qs.length - 1) / 4) * 100);
+  });
+  return result;
+}
+
+function getInterpBand(score) {
+  if (score >= 80) return "veryHigh";
+  if (score >= 65) return "high";
+  if (score >= 45) return "average";
+  if (score >= 30) return "low";
+  return "veryLow";
+}
+
+function getInterpLabel(score) {
+  const map = { veryLow: "Very Low", low: "Low", average: "Average", high: "High", veryHigh: "Very High" };
+  return map[getInterpBand(score)];
+}
+
+function PersonalityReport({ scores, aiNarrative, onRetake }) {
+  const sorted = [...HOGAN_SCALES].sort((a, b) => scores[b.id] - scores[a.id]);
+  const strengths = sorted.slice(0, 3);
+  const edges = sorted.slice(-2).reverse();
+
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+        <div>
+          <div style={styles.pageTitle}>Your Hogan Personality Report</div>
+          <div style={styles.pageSubtitle}>A validated profile of your professional personality and leadership identity</div>
+        </div>
+        <button style={{ ...styles.btn("outline"), fontSize: 12, padding: "8px 16px" }} onClick={onRetake}>
+          Retake
+        </button>
+      </div>
+
+      {/* AI Narrative */}
+      <div style={{ ...styles.card, background: "linear-gradient(135deg, #0E1E3A, #101828)", border: `1px solid ${COLORS.gold}44`, marginBottom: 24 }}>
+        <div style={{ fontSize: 12, color: COLORS.gold, fontWeight: 600, marginBottom: 16, letterSpacing: "0.08em" }}>
+          ✨ PERSONALIZED NARRATIVE REPORT
+        </div>
+        {aiNarrative
+          ? aiNarrative.split("\n\n").map((para, i) => (
+              <p key={i} style={{ fontSize: 14, lineHeight: 1.9, color: COLORS.text, marginBottom: 14, fontStyle: i === 0 ? "italic" : "normal", marginTop: 0 }}>
+                {para}
+              </p>
+            ))
+          : <div style={{ fontSize: 13, color: COLORS.muted, fontStyle: "italic" }}>Narrative unavailable. Connect with your coach for a personalized interpretation.</div>
+        }
+      </div>
+
+      {/* Scale profiles */}
+      <div style={{ ...styles.card, marginBottom: 24 }}>
+        <div style={{ fontSize: 12, color: COLORS.accent, fontWeight: 600, marginBottom: 20, letterSpacing: "0.08em" }}>
+          PERSONALITY SCALE PROFILES
+        </div>
+        {HOGAN_SCALES.map((scale, si) => {
+          const score = scores[scale.id] ?? 0;
+          const band = getInterpBand(score);
+          const label = getInterpLabel(score);
+          return (
+            <div key={scale.id} style={{ marginBottom: 20, paddingBottom: 20, borderBottom: si < HOGAN_SCALES.length - 1 ? `1px solid ${COLORS.border}` : "none" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
+                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                  <span style={{ fontSize: 20 }}>{scale.icon}</span>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: scale.color }}>{scale.name}</div>
+                    <div style={{ fontSize: 11, color: COLORS.muted }}>{scale.description}</div>
+                  </div>
+                </div>
+                <div style={{ textAlign: "right", flexShrink: 0, marginLeft: 16 }}>
+                  <div style={{ fontSize: 24, fontWeight: 700, color: scale.color, lineHeight: 1 }}>{score}</div>
+                  <div style={{ ...styles.tag(scale.color), fontSize: 10, marginTop: 4 }}>{label}</div>
+                </div>
+              </div>
+              <div style={styles.progressBar(score, scale.color)}>
+                <div style={styles.progressFill(score, scale.color)} />
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, color: COLORS.muted, margin: "4px 0 8px" }}>
+                {["Very Low", "Low", "Average", "High", "Very High"].map((l) => <span key={l}>{l}</span>)}
+              </div>
+              <div style={{ fontSize: 13, lineHeight: 1.7, color: COLORS.text, fontStyle: "italic", background: COLORS.surface, padding: "10px 14px", borderRadius: 8, borderLeft: `3px solid ${scale.color}` }}>
+                {scale.interpretations[band]}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Strengths & Development edges */}
+      <div style={{ ...styles.grid2, marginBottom: 24 }}>
+        <div style={{ ...styles.card, border: `1px solid ${COLORS.green}44` }}>
+          <div style={{ fontSize: 12, color: COLORS.green, fontWeight: 600, marginBottom: 16, letterSpacing: "0.08em" }}>SIGNATURE STRENGTHS</div>
+          {strengths.map((scale, i) => (
+            <div key={scale.id} style={{ display: "flex", gap: 12, paddingBottom: 14, marginBottom: i < strengths.length - 1 ? 14 : 0, borderBottom: i < strengths.length - 1 ? `1px solid ${COLORS.border}` : "none" }}>
+              <span style={{ fontSize: 22 }}>{scale.icon}</span>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: scale.color, marginBottom: 4 }}>
+                  {scale.name} <span style={{ fontWeight: 400, color: COLORS.muted }}>· {scores[scale.id]}/100</span>
+                </div>
+                <div style={{ fontSize: 12, color: COLORS.muted, lineHeight: 1.6 }}>
+                  {scale.interpretations[getInterpBand(scores[scale.id])]}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ ...styles.card, border: `1px solid ${COLORS.gold}44` }}>
+          <div style={{ fontSize: 12, color: COLORS.gold, fontWeight: 600, marginBottom: 16, letterSpacing: "0.08em" }}>DEVELOPMENT OPPORTUNITIES</div>
+          {edges.map((scale, i) => (
+            <div key={scale.id} style={{ display: "flex", gap: 12, paddingBottom: 14, marginBottom: i < edges.length - 1 ? 14 : 0, borderBottom: i < edges.length - 1 ? `1px solid ${COLORS.border}` : "none" }}>
+              <span style={{ fontSize: 22 }}>{scale.icon}</span>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: scale.color, marginBottom: 4 }}>
+                  {scale.name} <span style={{ fontWeight: 400, color: COLORS.muted }}>· {scores[scale.id]}/100</span>
+                </div>
+                <div style={{ fontSize: 12, color: COLORS.muted, lineHeight: 1.6, marginBottom: 6 }}>
+                  {scale.interpretations[getInterpBand(scores[scale.id])]}
+                </div>
+                <div style={{ fontSize: 12, color: COLORS.gold, fontStyle: "italic", lineHeight: 1.5 }}>
+                  {scale.leadershipImplication}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Leadership implications grid */}
+      <div style={{ ...styles.card, marginBottom: 24 }}>
+        <div style={{ fontSize: 12, color: COLORS.accent, fontWeight: 600, marginBottom: 16, letterSpacing: "0.08em" }}>
+          LEADERSHIP IMPLICATIONS BY SCALE
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          {HOGAN_SCALES.map((scale) => (
+            <div key={scale.id} style={{ padding: "12px 14px", background: COLORS.surface, borderRadius: 8, border: `1px solid ${COLORS.border}` }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <span style={{ fontSize: 16 }}>{scale.icon}</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: scale.color }}>{scale.name}</span>
+                <span style={{ ...styles.tag(scale.color), fontSize: 10 }}>{scores[scale.id]}/100</span>
+              </div>
+              <div style={{ fontSize: 12, color: COLORS.muted, lineHeight: 1.6 }}>{scale.leadershipImplication}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div style={{ ...styles.card, background: "linear-gradient(135deg, #0D1926, #111520)", border: `1px solid ${COLORS.accent}44`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div>
+          <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>Explore These Results with Your Coach</div>
+          <div style={{ fontSize: 13, color: COLORS.muted, fontStyle: "italic" }}>
+            Your coach can help you interpret this profile within the context of your leadership challenges.
+          </div>
+        </div>
+        <div style={{ flexShrink: 0, marginLeft: 20 }}>
+          <button style={styles.btn("primary")}>Open AI Coach →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PersonalityAssessmentPage() {
+  const [phase, setPhase] = useState("intro");
+  const [answers, setAnswers] = useState({});
+  const [page, setPage] = useState(0);
+  const [scores, setScores] = useState({});
+  const [aiNarrative, setAiNarrative] = useState("");
+  const topRef = useRef(null);
+
+  const pageQuestions = HOGAN_QUESTIONS.slice(page * QUESTIONS_PER_PAGE, (page + 1) * QUESTIONS_PER_PAGE);
+  const answered = Object.keys(answers).length;
+  const progress = (answered / HOGAN_QUESTIONS.length) * 100;
+  const pageComplete = pageQuestions.every((q) => answers[q.id] !== undefined);
+  const isLastPage = page === TOTAL_PAGES - 1;
+
+  function scrollTop() { topRef.current?.scrollIntoView({ behavior: "smooth" }); }
+
+  function nextPage() { if (pageComplete) { setPage((p) => p + 1); scrollTop(); } }
+  function prevPage() { setPage((p) => Math.max(0, p - 1)); scrollTop(); }
+
+  async function submitAssessment() {
+    const computed = computeHoganScores(answers);
+    setScores(computed);
+    setPhase("generating");
+
+    const summary = HOGAN_SCALES.map((s) => `- ${s.name}: ${computed[s.id]}/100 (${getInterpLabel(computed[s.id])})`).join("\n");
+
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1500,
+          system: `You are an expert organizational psychologist specializing in the Hogan Personality Inventory (HPI). Generate honest, incisive, and constructive personality reports grounded strictly in the score data provided.`,
+          messages: [{
+            role: "user",
+            content: `A leader has completed a 50-question Hogan-based personality assessment. Write a personalized narrative report in exactly 4 paragraphs — no headers, no bullets, pure prose separated by double newlines, written in second person ("You…"):
+
+Paragraph 1 — LEADERSHIP IDENTITY (2-3 sentences): Describe their core leadership character based on their highest and lowest scores. Be precise and avoid generic language.
+
+Paragraph 2 — SIGNATURE STRENGTHS (3-4 sentences): Name the specific strengths their profile predicts, grounded in the scale scores. Be specific about how these show up in leadership contexts.
+
+Paragraph 3 — DEVELOPMENT EDGES (3-4 sentences): Identify the growth areas implied by their lowest scores, framed as genuine opportunities rather than deficits. Be constructive but honest.
+
+Paragraph 4 — STRATEGIC PRIORITY (2-3 sentences): Give one clear, high-impact development recommendation that is directly tied to the profile. Make it actionable.
+
+Hogan Profile:
+${summary}`,
+          }],
+        }),
+      });
+      const data = await res.json();
+      setAiNarrative(data.content?.[0]?.text ?? "");
+    } catch {
+      setAiNarrative("Your personality profile reveals a distinctive leadership identity. Connect with your coach to explore the full implications of your Hogan results.");
+    }
+    setPhase("report");
+  }
+
+  function retake() { setPhase("intro"); setAnswers({}); setPage(0); setScores({}); setAiNarrative(""); }
+
+  // ── INTRO ──
+  if (phase === "intro") {
+    return (
+      <div>
+        <div style={styles.pageTitle}>Hogan Personality Assessment</div>
+        <div style={styles.pageSubtitle}>A validated framework for understanding your leadership identity</div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 24, marginBottom: 24 }}>
+          <div style={styles.card}>
+            <div style={{ fontSize: 12, color: COLORS.accent, fontWeight: 600, marginBottom: 12, letterSpacing: "0.08em" }}>ABOUT THIS ASSESSMENT</div>
+            <p style={{ fontSize: 14, lineHeight: 1.8, marginBottom: 16, marginTop: 0 }}>
+              This 50-question assessment is modeled on the Hogan Personality Inventory (HPI) — one of the most widely validated personality instruments used in executive selection and leadership development globally. It measures how you typically present yourself in professional contexts across seven personality scales.
+            </p>
+            <p style={{ fontSize: 14, lineHeight: 1.8, color: COLORS.muted, fontStyle: "italic", marginBottom: 0, marginTop: 0 }}>
+              There are no right or wrong answers. Respond based on how you actually are, not how you think you should be. Authenticity produces the most useful results.
+            </p>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {[
+              { label: "Questions", value: "50", icon: "📝" },
+              { label: "Estimated time", value: "10–15 min", icon: "⏱️" },
+              { label: "Personality scales", value: "7", icon: "📊" },
+            ].map((s) => (
+              <div key={s.label} style={{ ...styles.card, display: "flex", alignItems: "center", gap: 16, padding: 16 }}>
+                <span style={{ fontSize: 22 }}>{s.icon}</span>
+                <div>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: COLORS.accent }}>{s.value}</div>
+                  <div style={{ fontSize: 12, color: COLORS.muted }}>{s.label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ ...styles.card, marginBottom: 24 }}>
+          <div style={{ fontSize: 12, color: COLORS.accent, fontWeight: 600, marginBottom: 16, letterSpacing: "0.08em" }}>THE 7 HOGAN SCALES MEASURED</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
+            {HOGAN_SCALES.map((scale, i) => (
+              <div key={scale.id} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "12px 0", borderBottom: i < HOGAN_SCALES.length - 2 ? `1px solid ${COLORS.border}` : "none", paddingRight: i % 2 === 0 ? 24 : 0, paddingLeft: i % 2 === 1 ? 24 : 0, borderRight: i % 2 === 0 ? `1px solid ${COLORS.border}` : "none" }}>
+                <span style={{ fontSize: 22 }}>{scale.icon}</span>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: scale.color }}>{scale.name}</div>
+                  <div style={{ fontSize: 12, color: COLORS.muted, lineHeight: 1.5 }}>{scale.description}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <button style={{ ...styles.btn("primary"), padding: "14px 40px", fontSize: 15 }} onClick={() => setPhase("questions")}>
+            Begin Assessment →
+          </button>
+          <div style={{ fontSize: 12, color: COLORS.muted, fontStyle: "italic" }}>
+            Rate each statement 1 (Strongly Disagree) → 5 (Strongly Agree)
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── GENERATING ──
+  if (phase === "generating") {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh", textAlign: "center" }}>
+        <div style={{ fontSize: 52, marginBottom: 20 }}>🧠</div>
+        <div style={{ fontSize: 22, fontWeight: 600, marginBottom: 10 }}>Analyzing Your Profile</div>
+        <div style={{ fontSize: 14, color: COLORS.muted, fontStyle: "italic", marginBottom: 32 }}>
+          Scoring 7 personality scales and generating your personalized Hogan report…
+        </div>
+        <Spinner />
+      </div>
+    );
+  }
+
+  // ── REPORT ──
+  if (phase === "report") {
+    return <PersonalityReport scores={scores} aiNarrative={aiNarrative} onRetake={retake} />;
+  }
+
+  // ── QUESTIONS ──
+  return (
+    <div>
+      <div ref={topRef} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+        <div style={styles.pageTitle}>Hogan Personality Assessment</div>
+        <div style={{ fontSize: 13, color: COLORS.muted }}>Page {page + 1} of {TOTAL_PAGES} · {answered}/50</div>
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <div style={styles.progressBar(progress)}>
+          <div style={styles.progressFill(progress, COLORS.accent)} />
+        </div>
+        <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 4 }}>{Math.round(progress)}% complete</div>
+      </div>
+
+      {pageQuestions.map((q) => {
+        const scale = HOGAN_SCALES.find((s) => s.id === q.scale);
+        return (
+          <div key={q.id} style={{ ...styles.assessmentQ, marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+              <span style={{ fontSize: 14 }}>{scale.icon}</span>
+              <span style={styles.tag(scale.color)}>{scale.name}</span>
+              <span style={{ fontSize: 11, color: COLORS.muted }}>Q{q.id}</span>
+            </div>
+            <div style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.6, marginBottom: 16 }}>{q.text}</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8 }}>
+              {LIKERT_LABELS.map((label, idx) => {
+                const val = idx + 1;
+                const selected = answers[q.id] === val;
+                return (
+                  <button
+                    key={val}
+                    onClick={() => setAnswers({ ...answers, [q.id]: val })}
+                    style={{
+                      padding: "10px 4px",
+                      borderRadius: 8,
+                      border: `1px solid ${selected ? scale.color : COLORS.border}`,
+                      background: selected ? scale.color + "22" : "transparent",
+                      color: selected ? scale.color : COLORS.muted,
+                      cursor: "pointer",
+                      fontSize: 11,
+                      fontFamily: "'Georgia', serif",
+                      textAlign: "center",
+                      lineHeight: 1.4,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 4,
+                      transition: "all 0.15s",
+                    }}
+                  >
+                    <span style={{ fontSize: 17, fontWeight: 700 }}>{val}</span>
+                    <span style={{ whiteSpace: "pre-line" }}>{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+        <button
+          style={{ ...styles.btn("outline"), opacity: page === 0 ? 0.3 : 1 }}
+          onClick={prevPage}
+          disabled={page === 0}
+        >
+          ← Previous
+        </button>
+
+        {!isLastPage ? (
+          <button
+            style={{ ...styles.btn("primary"), opacity: pageComplete ? 1 : 0.4 }}
+            onClick={nextPage}
+            disabled={!pageComplete}
+          >
+            Next →
+          </button>
+        ) : (
+          <button
+            style={{ ...styles.btn("gold"), padding: "12px 28px", opacity: answered === 50 ? 1 : 0.4 }}
+            onClick={() => { if (answered === 50) submitAssessment(); }}
+            disabled={answered < 50}
+          >
+            Generate My Report →
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── APP ─────────────────────────────────────────────────────────────────────
 
 export default function App() {
@@ -1007,6 +1600,7 @@ export default function App() {
     { id: "dashboard", label: "Dashboard" },
     { id: "coach", label: "AI Coach" },
     { id: "assessment", label: "Assessment" },
+    { id: "personality", label: "Personality" },
     { id: "growth", label: "Growth Plan" },
     { id: "content", label: "Library" },
   ];
@@ -1035,6 +1629,7 @@ export default function App() {
         {tab === "dashboard" && <DashboardPage setTab={setTab} />}
         {tab === "coach" && <CoachPage />}
         {tab === "assessment" && <AssessmentPage />}
+        {tab === "personality" && <PersonalityAssessmentPage />}
         {tab === "growth" && <GrowthPage />}
         {tab === "content" && <ContentPage />}
       </main>
